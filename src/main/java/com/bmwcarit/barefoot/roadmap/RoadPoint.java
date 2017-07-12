@@ -64,6 +64,8 @@ public class RoadPoint extends com.bmwcarit.barefoot.topology.Point<Road> {
     public JSONObject toJSON() throws JSONException {
         JSONObject json = edge().toJSON();
         json.put("frac", fraction());
+        Point p = geometry();
+        json.put("coordinate", p.getX() + "," + p.getY());
         return json;
     }
 

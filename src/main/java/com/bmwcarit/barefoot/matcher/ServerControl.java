@@ -26,6 +26,7 @@ import com.bmwcarit.barefoot.matcher.MatcherServer.GeoJSONOutputFormatter;
 import com.bmwcarit.barefoot.matcher.MatcherServer.InputFormatter;
 import com.bmwcarit.barefoot.matcher.MatcherServer.OutputFormatter;
 import com.bmwcarit.barefoot.matcher.MatcherServer.SlimJSONOutputFormatter;
+import com.bmwcarit.barefoot.matcher.MatcherServer.Bey2ollakJSONFormatter;
 import com.bmwcarit.barefoot.roadmap.Loader;
 import com.bmwcarit.barefoot.roadmap.RoadMap;
 import com.bmwcarit.barefoot.util.SourceException;
@@ -144,6 +145,9 @@ public abstract class ServerControl {
                         break;
                     case "--geojson":
                         output = new GeoJSONOutputFormatter();
+                        break;
+                    case "--bey2ollak":
+                        output = new Bey2ollakJSONFormatter();
                         break;
                     default:
                         logger.warn("invalid option {} ignored", args[i]);

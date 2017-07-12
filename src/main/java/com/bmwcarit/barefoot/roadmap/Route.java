@@ -35,6 +35,7 @@ public class Route extends Path<Road> {
 
     private Double length = null;
     private Double time = null;
+    private List<RoadPoint> road_points = null;
 
     /**
      * Creates a {@link Route} object. (This is a base case that consists of only one

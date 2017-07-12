@@ -145,8 +145,13 @@ public class Road extends AbstractEdge<Road> {
      */
     public JSONObject toJSON() throws JSONException {
         JSONObject json = new JSONObject();
-        json.put("road", base().id());
+        json.put("gid", base().id());
+        json.put("osmId", base().refid());
         json.put("heading", heading());
+        json.put("ordinal_heading", heading().ordinal());
+        json.put("length", length());
+        json.put("source", source());
+        json.put("target", target());
         return json;
     }
 

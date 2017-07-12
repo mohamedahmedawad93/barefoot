@@ -16,14 +16,15 @@ package com.bmwcarit.barefoot.matcher;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.util.List;
 
 import com.bmwcarit.barefoot.markov.KState;
 import com.bmwcarit.barefoot.roadmap.Road;
 import com.bmwcarit.barefoot.roadmap.RoadMap;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Polyline;
+import com.esri.core.geometry.Point;
 import com.esri.core.geometry.WktExportFlags;
-
 /**
  * <i>k</i>-State data structure wrapper of {@link KState} for organizing state memory in HMM map
  * matching.
@@ -249,6 +250,35 @@ public class MatcherKState extends KState<MatcherCandidate, MatcherTransition, M
                 }
             }
         }
+        return json;
+    }
+
+    public JSONObject toBey2ollakJSON() throws JSONException {
+        JSONObject json = new JSONObject();
+        JSONArray samples_arr = new JSONArray();
+        List<MatcherSample> samples = this.samples();
+        List<MatcherCandidate> sequence = this.sequence();
+        for (int i = 1; i < samples.size(); ++i)
+        {
+            JSONObject sample = new JSONObject();
+            sample.put("id1", samples.get(i-1).id() );
+            sample.put("id2", samples.get(i).id() );
+            sample.put("dt1", samples.get(i-1).time() );
+            sample.put("dt2", samples.get(i).time() );
+            Point p1 = samples.get(i-1).point();
+            Point p2 = samples.get(i).point();
+            sample.put("p1", p1.getX() + "," + p1.getY());
+            sample.put("p2", p2.getX() + "," + p2.getY());
+            if(sequence.get(i).transition() == null) continue;
+            sample.put("rp1", sequence.get(i-1).point().toJSON());
+            sample.put("rp2", sequence.get(i).point().toJSON());
+            // sample.put("routeStart", sequence.get(i).transition().route().source().toJSON());
+            // sample.put("routeEnd", sequence.get(i).transition().route().target().toJSON());
+            sample.put("route", sequence.get(i).transition().route().toJSON());
+            samples_arr.put(sample);
+        }
+        json.put("samples", samples_arr);
+        // json.put("monitor", toMonitorJSON());
         return json;
     }
 }

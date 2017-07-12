@@ -160,6 +160,18 @@ public class MatcherServer extends AbstractServer {
         }
     }
 
+    public static class Bey2ollakJSONFormatter extends OutputFormatter {
+        @Override
+        public String format(String request, MatcherKState output) {
+            try {
+                return output.toBey2ollakJSON().toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+                throw new RuntimeException("creating bey2ollak JSON response");
+            }
+        }
+    }
+
     private static class AdaptiveOutputFormatter extends OutputFormatter {
         private final OutputFormatter defaultFormatter;
 
@@ -174,6 +186,7 @@ public class MatcherServer extends AbstractServer {
 
                 if (jsonrequest instanceof JSONObject) {
                     String jsonformat = ((JSONObject) jsonrequest).optString("format");
+                    System.out.println("Json format: " + jsonformat);
                     if (jsonformat != null) {
                         switch (jsonformat) {
                             case "json":
@@ -184,6 +197,8 @@ public class MatcherServer extends AbstractServer {
                                 return new GeoJSONOutputFormatter().format(request, output);
                             case "debug":
                                 return new DebugJSONOutputFormatter().format(request, output);
+                            case "bey2ollak":
+                                return new Bey2ollakJSONFormatter().format(request, output);
                             default:
                                 break;
                         }
