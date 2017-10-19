@@ -52,7 +52,7 @@ public abstract class ServerControl {
      * @param input {@link InputFormatter} to be used for input formatting.
      * @param output {@link OutputFormatter} to be used for output formatting.
      */
-    public static void initServer(String pathServerProperties, String pathDatabaseProperties,
+    public static MatcherServer initServer(String pathServerProperties, String pathDatabaseProperties,
             InputFormatter input, OutputFormatter output) {
         logger.info("initialize server");
 
@@ -90,6 +90,7 @@ public abstract class ServerControl {
         }
 
         matcherServer = new MatcherServer(serverProperties, map, input, output);
+        return matcherServer;
     }
 
     /**
@@ -123,8 +124,13 @@ public abstract class ServerControl {
             logger.error("stopping server failed, not yet started");
         }
     }
+    
+    public static void main(String[] args)
+	{
+		doMain(args);
+	}
 
-    public static void main(String[] args) {
+    public static MatcherServer doMain(String[] args) {
         if (args.length < 2 || args.length > 3) {
             logger.error(
                     "missing arguments\nusage: [--slimjson|--debug|--geojson] /path/to/server/properties /path/to/mapserver/properties");
@@ -159,11 +165,12 @@ public abstract class ServerControl {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                stopServer();
+                //stopServer();
             }
         });
 
-        initServer(args[args.length - 2], args[args.length - 1], input, output);
-        runServer();
+        MatcherServer matcherserver = initServer(args[args.length - 2], args[args.length - 1], input, output);
+        return matcherserver;
+        //runServer();
     }
 }
